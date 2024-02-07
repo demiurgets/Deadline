@@ -1,0 +1,39 @@
+/* styles.css */
+
+.navbar {
+    background-color: #80b5dc !important;
+    color: #fff; /* Navbar text color */
+}
+
+body {
+    background-color: #c6c1d7 !important; /* Body background color */
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowed text */
+    text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+}
+
+.task-details {
+    flex-grow: 1;
+    text-align: right; /* Align contents to the right */
+}
+
+.category-work {
+    background-color: rgba(0, 123, 255, 0.2); /* Work category color */
+    color: #000; /* Text color for Work category */
+}
+
+.category-personal {
+    background-color: rgba(40, 167, 69, 0.2); /* Personal category color */
+    color: #000; /* Text color for Personal category */
+}
+
+.category-school {
+    background-color: rgba(227, 227, 105, 0.558); /* School category color */
+    color: #000; /* Text color for School category */
+}
