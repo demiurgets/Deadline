@@ -14,6 +14,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('/add-task', [TaskController::class, 'addTask'])->name('tasks.add');
     Route::post('/delete-task', [TaskController::class, 'deleteTask'])->name('tasks.delete');
+
+    // New route for updating a task
+    Route::put('/update-task/{task}', [TaskController::class, 'updateTask'])->name('tasks.update');
 });
 
 Auth::routes();

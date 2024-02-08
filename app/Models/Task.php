@@ -14,12 +14,10 @@ class Task extends Model
         'name',
         'category',
         'due_date',
-        'user_id', // Add user_id to fillable fields
+        'user_id', 
+        'note',    
     ];
 
-    /**
-     * Define a relationship with the User model.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

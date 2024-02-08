@@ -1,8 +1,16 @@
 /* styles.css */
 
 .navbar {
-    background-color: #80b5dc !important;
+    background-color: #e6c2ea !important;
     color: #fff; /* Navbar text color */
+}
+
+.navbar-brand {
+    font-family: Papyrus, fantasy; font-size: 35px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 45.5px; 
+}
+
+.login-bg {
+    background-color: #f5e2a8;
 }
 
 body {
@@ -24,16 +32,42 @@ body {
 }
 
 .category-work {
-    background-color: rgba(0, 123, 255, 0.2); /* Work category color */
+    background-color: rgb(154, 200, 250); /* Work category color */
     color: #000; /* Text color for Work category */
 }
 
 .category-personal {
-    background-color: rgba(40, 167, 69, 0.2); /* Personal category color */
-    color: #000; /* Text color for Personal category */
+    background-color: rgba(220, 175, 230, 0.966); /* Personal category color */
+    color: #ffffff; /* Text color for Personal category */
 }
 
 .category-school {
-    background-color: rgba(227, 227, 105, 0.558); /* School category color */
+    background-color: rgba(255, 255, 206, 0.959); /* School category color */
     color: #000; /* Text color for School category */
+}
+
+/* Adjust text wrapping */
+.task-details p {
+    text-align: left; /* Align modal body content to the left */
+    white-space: normal; /* Allow text wrapping */
+    font-weight: bold;
+
+}
+.modal-content label {
+    font-weight: bold;
+}
+
+.due-date-red {
+    background-color: #ff0202;
+    color: rgb(0, 0, 0);
+}
+
+.due-date-yellow {
+    background-color: yellow;
+    color: rgb(0, 0, 0);
+}
+
+.due-date-green {
+    background-color: green;
+    color: rgb(0, 0, 0);
 }

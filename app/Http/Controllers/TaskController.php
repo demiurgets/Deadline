@@ -10,10 +10,8 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        // Retrieve tasks associated with the authenticated user
         $tasks = Auth::user()->tasks();
 
-        // Sort tasks if requested
         if ($request->sort == 'due_date') {
             $tasks->orderBy('due_date');
         } elseif ($request->sort == 'category') {
@@ -31,13 +29,14 @@ class TaskController extends Controller
             'task' => 'required|string',
             'category' => 'nullable|string',
             'due_date' => 'nullable|date',
+            'note' => 'nullable|string', 
         ]);
 
-        // Create task associated with the authenticated user
         Auth::user()->tasks()->create([
             'name' => $validatedData['task'],
             'category' => $validatedData['category'],
             'due_date' => $validatedData['due_date'],
+            'note' => $validatedData['note'], 
         ]);
 
         return redirect('/');
@@ -47,9 +46,27 @@ class TaskController extends Controller
     {
         $taskToDelete = $request->input('taskToDelete');
 
-        // Delete task associated with the authenticated user
         Auth::user()->tasks()->where('name', $taskToDelete)->delete();
 
         return redirect('/');
+    }
+
+    public function updateTask(Request $request, Task $task)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'category' => 'nullable|string',
+            'due_date' => 'nullable|date',
+            'note' => 'nullable|string', 
+        ]);
+
+        $task->update([
+            'name' => $validatedData['name'],
+            'category' => $validatedData['category'],
+            'due_date' => $validatedData['due_date'],
+            'note' => $validatedData['note'], 
+        ]);
+
+        return redirect('/?sort=due_date');
     }
 }
