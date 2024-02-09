@@ -1,21 +1,44 @@
 /* styles.css */
 
 .navbar {
-    background-color: #e6c2ea !important;
-    color: #fff; /* Navbar text color */
+    background-color: #faee49 !important;
+    color: #dd62cb; /* Navbar text color */
 }
 
 .navbar-brand {
-    font-family: Papyrus, fantasy; font-size: 35px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 45.5px; 
+    font-family: "Honk", system-ui;
+    font-optical-sizing: auto;
+     font-weight: 400;
+     font-style: normal;
+     font-variation-settings: "MORF" 13, "SHLN" 50;
+     font-size: 55px;
 }
 
 .login-bg {
-    background-color: #f5e2a8;
+    background-color: #faee49;
 }
 
 body {
-    background-color: #c6c1d7 !important; /* Body background color */
+    background-color: #c345a9 !important; /* Body background color */
+    color: white; /*body text color */
 }
+
+/* Custom CSS for settings page */
+.card-header {
+    background-color: #44193a; 
+    color: #fefefe; 
+}
+
+.card-body {
+    background-color: #e47fc4; 
+    color: #000000;
+}
+
+.card-body-custom {
+    background-color: #e47fc4;
+    color: #000000; 
+}
+
 
 .list-group-item {
     display: flex;
@@ -28,7 +51,7 @@ body {
 
 .task-details {
     flex-grow: 1;
-    text-align: right; /* Align contents to the right */
+    text-align: right;
 }
 
 .category-work {
@@ -38,11 +61,11 @@ body {
 
 .category-personal {
     background-color: rgba(220, 175, 230, 0.966); /* Personal category color */
-    color: #ffffff; /* Text color for Personal category */
+    color: #000000; /* Text color for Personal category */
 }
 
 .category-school {
-    background-color: rgba(255, 255, 206, 0.959); /* School category color */
+    background-color: rgb(195,255,124)    ; /* School category color */
     color: #000; /* Text color for School category */
 }
 
@@ -62,6 +85,13 @@ body {
     color: rgb(0, 0, 0);
 }
 
+
+.due-date-orange {
+    background-color: darkorange;
+    color: rgb(0, 0, 0);
+
+}
+
 .due-date-yellow {
     background-color: yellow;
     color: rgb(0, 0, 0);
@@ -71,3 +101,4 @@ body {
     background-color: green;
     color: rgb(0, 0, 0);
 }
+

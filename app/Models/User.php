@@ -19,6 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'collaborative_mode', 
     ];
 
     /**
@@ -45,6 +46,6 @@ class User extends Authenticatable
      */
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->belongsToMany(Task::class);
     }
 }
