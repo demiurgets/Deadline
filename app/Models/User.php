@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'collaborative_mode', 
+        'collaborative_mode',
     ];
 
     /**
@@ -42,10 +43,46 @@ class User extends Authenticatable
     ];
 
     /**
-     * Define a one-to-many relationship with the Task model.
+     * Create a new User model instance.
+     *
+     * @param  array  $attributes
+     * @return void
      */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+    }
+
+
     public function tasks()
     {
         return $this->belongsToMany(Task::class);
     }
+
+    public function collaborators()
+    {
+        return $this->belongsToMany(User::class, 'user_collaborators', 'user_id', 'collaborator_id')
+            ->withTimestamps();
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Define a created event listener
+        static::created(function ($user) {
+            // Attach default categories to the newly created user
+            $user->categories()->attach([
+                1, // ID of 'work' category
+                2, // ID of 'school' category
+                3, // ID of 'personal' category
+            ]);
+        });
+    }
+
+    public function categories()
+{
+    return $this->hasMany(Category::class);
+}
+
 }

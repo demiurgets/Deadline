@@ -24,7 +24,6 @@ class TaskController extends Controller
     return view('welcome', ['tasks' => $tasks]);
     }
 
-
     public function addTask(Request $request)
     {
         $validatedData = $request->validate([
@@ -33,48 +32,26 @@ class TaskController extends Controller
             'due_date' => 'nullable|date',
             'note' => 'nullable|string', 
         ]);
-
-        // Create the task
+    
+        
+        // Create the task and set the category name
         $task = Auth::user()->tasks()->create([
             'name' => $validatedData['task'],
             'category' => $validatedData['category'],
             'due_date' => $validatedData['due_date'],
             'note' => $validatedData['note'], 
         ]);
-
-        // Initialize message variables
-        $successMessage = 'Task created successfully.';
-        $errorMessage = 'An error occurred while adding collaborators.';
-
-        // Add collaborators if collaborative mode is enabled
-        if (Auth::user()->collaborative_mode) {
-            // Parse emails from input string
-            $emails = explode(',', $request->input('collaborators'));
-            $failedEmails = [];
-
-            foreach ($emails as $email) {
-                $email = trim($email);
-                $user = User::where('email', $email)->first();
-
-                if ($user && $user->collaborative_mode) {
-                    $task->collaborators()->attach($user->id);
-                } else {
-                    // Add email to list of failed emails
-                    $failedEmails[] = $email;
-                }
-            }
-
-            if (count($failedEmails) > 0) {
-                $errorMessage .= ' Failed emails: ' . implode(', ', $failedEmails);
-                return redirect('/')->with('error', $errorMessage);
-            }
-        }
-
-        return redirect('/')->with('success', $successMessage);
-    }
-
     
-
+        // Associate collaborators with the task
+        if ($request->has('collaborators')) {
+            $collaborators = $request->input('collaborators');
+            $task->collaborators()->attach($collaborators);
+        }
+    
+        // Redirect back with success message
+        return redirect('/')->with('success', 'Task created successfully.');
+    }
+    
     public function deleteTask(Request $request)
     {
         $taskToDelete = $request->input('taskToDelete');

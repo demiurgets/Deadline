@@ -15,6 +15,9 @@
 </head>
 <body>
     @include('layouts.navbar')
+    @php
+        use App\Category;
+    @endphp
 
     <div class="container mt-5">
 
@@ -28,9 +31,9 @@
                 @else
                     <h2>Your Deadlines:</h2>
                     <ul class="list-group">
-                        <!-- Task list items -->
                         @foreach ($tasks as $task)
                             @php
+                                
                                 date_default_timezone_set('America/Chicago');
 
                                 // Convert the due date to the desired format
@@ -42,7 +45,7 @@
                                 
                                 // Get today's date using DateTime
                                 $today = new DateTime();
-                                $today->setTime(0, 0, 0); // Set time to midnight to compare dates without time
+                                $today->setTime(0, 0, 0);
                                 $todayString = $today->format('Y-m-d');
                                 
                                 // Get tomorrow's date
@@ -64,56 +67,44 @@
                                 // Convert the due date to the desired format
                                 $dueDate = date('M d', strtotime($task->due_date));
 
-                                $categoryColor = '';
-                                $alpha = 1;
-                                switch ($task->category) {
-                                    case 'Work':
-                                        $categoryColor = 'category-work'; 
-                                        break;
-                                    case 'Personal':
-                                        $categoryColor = 'category-personal'; 
-                                        break;
-                                    case 'School':
-                                        $categoryColor = 'category-school';
-                                        break;
-                                    default:
-                                        $categoryColor = 'category-gray';
-                                        break;
+                                // Retrieve category color from database
+                                $category = App\Models\Category::where('name', $task->category)
+                                                        ->where('user_id', auth()->user()->id)
+                                                        ->first();
+                                if ($category) {
+                                    $categoryColor = $category->color;
+
+                                } else {
+                                    // Default to white if category not found
+                                    $categoryColor = '#FFFFFF'; // white color
                                 }
                             @endphp
-                            <li class="list-group-item {{ $categoryColor }}">
-                                <!-- Task name -->
-                                <span style="font-weight: bold; color: black">{{ $task->name }}</span>
-                                <div class="task-details">
-                                    <!-- Category badge -->
-                                    @if ($task->category)
-                                        <span class="badge {{ $categoryColor }}" style="font-weight: bold; color: black; justify: right">{{ $task->category }}</span>
-                                    @endif
-                                    <!-- Due date badge -->
+                            <li class="list-group-item" style="background-color: {{ $categoryColor }};">
+                            <span style="font-weight: bold; color: black">{{ $task->name }}</span>
+                            <div class="task-details">
+                                @if ($task->category)
+                                    <span class="badge" style="background-color: {{ $categoryColor }}; font-weight: bold; color: black;">{{ $task->category }}</span>
+                                @endif
                                     @if ($task->due_date)
                                         <span class="badge {{ $dueDateClass }}" style="margin-right: 8px; justify: right"> {{ $dueDateText }}</span>
                                     @endif
-                                    <!-- Button to open modal -->
                                     <button type="button" class="btn btn-secondary btn-sm" style="margin-right: 8px;" data-bs-toggle="modal" data-bs-target="#taskModal{{ $task->id }}">
                                         Details
                                     </button>
                                     <!-- Details Modal -->
-                                    <div class="modal fade" id="taskModal{{ $task->id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ $task->id }}" aria-hidden="true">
+                                    <div class="modal fade"  id="taskModal{{ $task->id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ $task->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
-                                            <div class="modal-content {{ $categoryColor }}">
-                                                <!-- Modal header -->
+                                            <div class="modal-content " style="background-color: {{ $categoryColor }};">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="taskModalLabel{{ $task->id }}">{{ $task->name }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <!-- Task details -->
                                                     <p>Created: {{ $task->created_at->format('M d, Y') }}</p>
                                                     <p>{{ $task->category }}</p>
                                                     <p>Due: {{ $dueDate }}</p>
                                                     <p>Note: {{ $task->note }}</p>
 
-                                                    <!-- Collaborators -->
                                                     <p>Collaborators:</p>
                                                     <ul>
                                                         @foreach ($task->collaborators as $collaborator)
@@ -121,7 +112,6 @@
                                                         @endforeach
                                                     </ul>
                                                 </div>
-                                                <!-- Modal footer -->
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $task->id }}">Edit</button>
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -134,7 +124,7 @@
                                     <!-- Modal for editing -->
                                     <div class="modal fade" id="editTaskModal{{ $task->id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ $task->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
-                                            <div class="modal-content {{ $categoryColor }}">
+                                            <div class="modal-content " style="background-color: {{ $categoryColor }};">
                                                 <form action="{{ route('tasks.update', ['task' => $task->id]) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
@@ -143,33 +133,28 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <!-- Task name input -->
                                                     <div class="row mb-3">
                                                         <label for="editTaskName" class="col-sm-3 col-form-label">Task Name:</label>
                                                         <div class="col-sm-9">
                                                             <input type="text" class="form-control" id="editTaskName" name="name" value="{{ $task->name }}">
                                                         </div>
                                                     </div>
-                                                    <!-- Category dropdown -->
                                                     <div class="row mb-3">
                                                         <label for="editTaskCategory" class="col-sm-3 col-form-label">Category:</label>
                                                         <div class="col-sm-9">
                                                             <select class="form-select" id="editTaskCategory" name="category">
-                                                                <!-- Populate options dynamically from existing categories -->
-                                                                @foreach (['Work', 'Personal', 'School'] as $category)
-                                                                    <option value="{{ $category }}" {{ $task->category == $category ? 'selected' : '' }}>{{ $category }}</option>
+                                                                @foreach(Auth::user()->categories as $category)
+                                                                    <option value="{{ $category->name }}">{{ $category->name }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <!-- Due date input with datepicker -->
                                                     <div class="row mb-3">
                                                         <label for="editTaskDueDate" class="col-sm-3 col-form-label">Due Date:</label>
                                                         <div class="col-sm-9">
                                                             <input type="date" class="form-control" id="editTaskDueDate" name="due_date" value="{{ $task->due_date }}">
                                                         </div>
                                                     </div>
-                                                    <!-- Note textarea -->
                                                     <div class="row mb-3">
                                                         <label for="editTaskNote" class="col-sm-3 col-form-label">Note:</label>
                                                         <div class="col-sm-9">
@@ -190,16 +175,24 @@
 
 
                                 </div>
-                                <!-- Complete task button -->
+                                    <!-- Complete task button -->
+                                    @if ($dueDateText == 'Overdue') 
+                                    <form action="{{ route('tasks.delete') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="taskToDelete" value="{{ $task->name }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">_Dismiss_</button>
+                                    </form>
+                                
+                                @else 
                                 <form action="{{ route('tasks.delete') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="taskToDelete" value="{{ $task->name }}">
                                     <button type="submit" class="btn btn-success btn-sm">Complete</button>
                                 </form>
+                                @endif
                             </li>
                         @endforeach
                             </br>
-                    <!-- Sorting     -->
                     <!-- Sorting     -->
                         <div class="dropdown mb-3">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -224,11 +217,11 @@
                     <div class="mb-3">
                         <select name="category" class="form-select">
                             <option value="">Select Category</option>
-                            <option value="Work">Work</option>
-                            <option value="Personal">Personal</option>
-                            <option value="School">School</option>
-                            <!-- Add more options as needed -->
+                            @foreach(Auth::user()->categories as $category)
+                                <option value="{{ $category->name }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
+
                     </div>
                     <div class="mb-3">
                         <label>Finish by:</label>
@@ -241,9 +234,17 @@
                     @if(Auth::user()->collaborative_mode)
                         <div class="mb-3">
                             <label>Collaborators:</label>
-                            <input type="text" name="collaborators" class="form-control" placeholder="Separate emails by commas" autocomplete="off">
+                            <ul class="list-group">
+                                @foreach(Auth::user()->collaborators()->where('collaborative_mode', true)->get() as $collaborator)
+                                    <li>
+                                        <input type="checkbox" name="collaborators[]" value="{{ $collaborator->id }}">
+                                        {{ $collaborator->name }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     @endif
+
                     <button type="submit" class="btn btn-primary">Create!</button>
                 </form>
             </div>

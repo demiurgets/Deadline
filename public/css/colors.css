@@ -1,8 +1,11 @@
 /* styles.css */
 
 .navbar {
-    background-color: #faee49 !important;
-    color: #dd62cb; /* Navbar text color */
+    background-color: #6338d9 !important;
+    color: #ffffff; /* Navbar text color */
+}
+.navtext {
+    color: white;
 }
 
 .navbar-brand {
@@ -19,23 +22,23 @@
 }
 
 body {
-    background-color: #c345a9 !important; /* Body background color */
+    background-color: #20113b !important; /* Body background color */
     color: white; /*body text color */
 }
 
 /* Custom CSS for settings page */
 .card-header {
     background-color: #44193a; 
-    color: #fefefe; 
+    color: #ffffff; 
 }
 
 .card-body {
-    background-color: #e47fc4; 
+    background-color: #be9ab3; 
     color: #000000;
 }
 
 .card-body-custom {
-    background-color: #e47fc4;
+    background-color: #be9ab3;
     color: #000000; 
 }
 
@@ -102,3 +105,38 @@ body {
     color: rgb(0, 0, 0);
 }
 
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -60px;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
