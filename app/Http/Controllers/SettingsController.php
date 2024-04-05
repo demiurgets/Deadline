@@ -59,6 +59,15 @@ class SettingsController extends Controller
         return redirect()->back()->with('success', 'Password updated successfully.');
     }
 
+    public function updateAinlMode(Request $request)
+    {
+        $user = Auth::user();
+        $user->ainl_mode = $request->input('ainl_mode');
+
+        $user->save();
+
+        return response()->json(['message' => 'Collaboration mode updated successfully']);
+    }
     public function updatecollaborativeMode(Request $request)
     {
         $user = Auth::user();

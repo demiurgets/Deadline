@@ -91,7 +91,7 @@
                                     <button type="button" class="btn btn-secondary btn-sm" style="margin-right: 8px;" data-bs-toggle="modal" data-bs-target="#taskModal{{ $task->id }}">
                                         Details
                                     </button>
-                                    <!-- Details Modal -->
+                                    <!-- details Modal -->
                                     <div class="modal fade"  id="taskModal{{ $task->id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ $task->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content " style="background-color: {{ $categoryColor }};">
@@ -121,7 +121,7 @@
                                     </div>
 
 
-                                    <!-- Modal for editing -->
+                                    <!-- edit modal -->
                                     <div class="modal fade" id="editTaskModal{{ $task->id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ $task->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content " style="background-color: {{ $categoryColor }};">
@@ -142,9 +142,9 @@
                                                     <div class="row mb-3">
                                                         <label for="editTaskCategory" class="col-sm-3 col-form-label">Category:</label>
                                                         <div class="col-sm-9">
-                                                            <select class="form-select" id="editTaskCategory" name="category">
+                                                            <select class="form-select" id="editTaskCategory" name="category" selected="{{ $task->category }}">
                                                                 @foreach(Auth::user()->categories as $category)
-                                                                    <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                                                    <option value="{{ $category->name }}" {{ $task->category == $category->name ? 'selected' : '' }}>{{ $category->name }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -177,19 +177,21 @@
                                 </div>
                                     <!-- Complete task button -->
                                     @if ($dueDateText == 'Overdue') 
-                                    <form action="{{ route('tasks.delete') }}" method="POST">
+                                    <form action="{{ route('tasks.deleteOverdue') }}" method="POST">
                                         @csrf
-                                        <input type="hidden" name="taskToDelete" value="{{ $task->name }}">
-                                        <button type="submit" class="btn btn-danger btn-sm">_Dismiss_</button>
+                                        <input type="hidden" name="taskId" value="{{ $task->id }}">
+                                        <!-- Add additional hidden inputs for other attributes if needed -->
+                                        <button type="submit" class="btn btn-danger btn-sm">Dismiss</button>
                                     </form>
-                                
-                                @else 
-                                <form action="{{ route('tasks.delete') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="taskToDelete" value="{{ $task->name }}">
-                                    <button type="submit" class="btn btn-success btn-sm">Complete</button>
-                                </form>
-                                @endif
+                                    @else 
+                                    <form action="{{ route('tasks.deleteComplete') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="taskId" value="{{ $task->id }}">
+                                        <!-- Add additional hidden inputs for other attributes if needed -->
+                                        <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                                    </form>
+                                    @endif
+
                             </li>
                         @endforeach
                             </br>
@@ -209,6 +211,29 @@
             </div>
             <div class="col-md-4">
                 <h2>New Deadline</h2>
+                @if(Auth::user()->ainl_mode)
+                    <form action="{{ route('tasks.addAi') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <textarea type="text" name="ainl_task" class="form-control" required placeholder="" autocomplete="off"></textarea>
+                        </div>
+
+                        @if(Auth::user()->collaborative_mode)
+                            <div class="mb-3">
+                                <label>Collaborators:</label>
+                                <ul class="list-group">
+                                    @foreach(Auth::user()->collaborators()->where('collaborative_mode', true)->get() as $collaborator)
+                                        <li>
+                                            <input type="checkbox" name="collaborators[]" value="{{ $collaborator->id }}">
+                                            {{ $collaborator->name }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <button type="submit" class="btn btn-primary">Create!</button>
+                    </form>
+                @else
                 <form action="{{ route('tasks.add') }}" method="POST">
                     @csrf
                     <div class="mb-3">
@@ -247,6 +272,7 @@
 
                     <button type="submit" class="btn btn-primary">Create!</button>
                 </form>
+                @endif
             </div>
 
         </div>
@@ -257,17 +283,14 @@
     <script>
     function editTask() {
         console.log("HI")
-        // Close the current modal
         $('#taskModal').modal('hide');
         
-        // Open the new modal with input fields for editing
         $('#editTaskModal').modal('show');
         
-        // Populate input fields with current values
-        $('#taskNameInput').val($('#taskName').text());
-        $('#taskCategoryInput').val($('#taskCategory').text());
-        $('#taskDueDateInput').val($('#taskDueDate').text());
-        $('#taskNoteInput').val($('#taskNote').text());
+       // $('#taskNameInput').val($('#taskName').text());
+       // $('#taskCategoryInput').val($('#taskCategory').text());
+        //$('#taskDueDateInput').val($('#taskDueDate').text());
+        //$('#taskNoteInput').val($('#taskNote').text());
     }
 </script>
 

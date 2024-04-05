@@ -1,3 +1,4 @@
+<link href="{{ asset('css/colors.css') }}" rel="stylesheet">
 <nav class="navbar navbar-expand-md navbar-light shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
@@ -8,12 +9,12 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Left Side Of Navbar -->
+            <!-- Left Side-->
             <ul class="navbar-nav me-auto">
 
             </ul>
 
-            <!-- Right Side Of Navbar -->
+            <!-- Right Side -->
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link navtext" href="{{ url('/') }}">Home</a>

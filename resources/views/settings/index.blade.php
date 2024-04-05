@@ -28,8 +28,17 @@
                             </li>
                             <li class="list-group-item card-body-custom">
                                 <div class="mb-3">
+                                     <label class="form-check-label" for="AINLToolTip">Natural Language Mode</label>
+                                     <span class="tooltip-text" id="AINLToolTip" style="font-size: 20px;" data-bs-toggle="tooltip" title="AINL Mode allows you to create new deadlines using your natural language by using AI to process your words.">?</span>
+                                </div>
+                                <div class="mb-3 form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="ainlSwitch" {{ Auth::user()->ainl_mode ? 'checked' : '' }}>
+                                </div>
+                            </li>
+                            <li class="list-group-item card-body-custom">
+                                <div class="mb-3">
                                      <label class="form-check-label" for="collabTooltip">Collaborative Mode</label>
-                                     <span class="tooltip-text" id="collabTooltip" style="font-size: 20px;" data-bs-toggle="tooltip" title="Collaborative mode will allow you to share your own deadlines with other users, and receive shared deadlines from them. You can only share deadlines with users who also have Collaborative mode on">?</span>
+                                     <span class="tooltip-text" id="collabTooltip" style="font-size: 20px;" data-bs-toggle="tooltip" title="Collaborative mode will allow you to share your own deadlines with other users, and receive shared deadlines from them. You can only share deadlines with users who also have Collaborative mode on, the red users are unavaliable.">?</span>
                                 </div>
                                 <div class="mb-3 form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="collaborativeSwitch" {{ Auth::user()->collaborative_mode ? 'checked' : '' }}>
@@ -71,6 +80,9 @@
                                     </div>
                                 </li>
                             @endif
+                            <li class="list-group-item card-body-custom">
+
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -236,7 +248,35 @@
                     console.error(error)
                 }
             });
-            location.reload();
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#ainlSwitch').on('change', function() {
+            var isChecked = $(this).is(':checked');
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("update.ainl.mode") }}',
+                data: {
+                    ainl_mode: isChecked ? 1 : 0,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log('AI Natural Language mode updated successfully');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to update AI Natural Language mode');
+                    console.error(status);
+                    console.error(error)
+                }
+            });
+            setTimeout(function() {
+                location.reload();
+            }, 2000);
         });
     });
 </script>

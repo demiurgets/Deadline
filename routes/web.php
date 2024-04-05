@@ -9,10 +9,11 @@ use App\Http\Controllers\HistoryController;
 
 
 
+
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 
 Route::middleware('auth')->group(function () {
-    // Redirect authenticated users to tasks page after login
+
     Route::get('/home', [TaskController::class, 'index'])->name('home');
 
     Route::post('/add-collaborator', [UserController::class, 'addCollaborator'])->name('users.addCollaborator');
@@ -20,11 +21,17 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('/add-task', [TaskController::class, 'addTask'])->name('tasks.add');
-    Route::post('/delete-task', [TaskController::class, 'deleteTask'])->name('tasks.delete');
+    Route::post('/add-taskAi', [TaskController::class, 'addTaskAi'])->name('tasks.addAi');
+    Route::post('/delete-comp', [TaskController::class, 'deleteComplete'])->name('tasks.deleteComplete');
+    Route::post('/delete-over', [TaskController::class, 'deleteOverdue'])->name('tasks.deleteOverdue');
     Route::put('/update-task/{task}', [TaskController::class, 'updateTask'])->name('tasks.update');
 
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
+    Route::get('/history/moveComplete/{task}', [HistoryController::class, 'moveComplete'])->name('history.move.complete');
 
+
+
+    Route::post('/update-ainl-mode', [SettingsController::class, 'updateAinlMode'])->name('update.ainl.mode');
     Route::post('/update-collaborative-mode', [SettingsController::class, 'updatecollaborativeMode'])->name('update.collaborative.mode');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
@@ -37,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/add-task-category', [SettingsController::class, 'addTaskCategory'])->name('settings.addTaskCategory');
     Route::post('/settings/remove-task-category', [SettingsController::class, 'removeTaskCategory'])->name('settings.removeTaskCategory');
     Route::post('/settings/update-category-colors', [SettingsController::class, 'updateCategoryColors'])->name('settings.updateCategoryColors');
+
+
 
     
     

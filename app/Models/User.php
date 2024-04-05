@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'collaborative_mode',
+        'ainl_mode',
     ];
 
     /**
@@ -69,9 +70,7 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        // Define a created event listener
         static::created(function ($user) {
-            // Attach default categories to the newly created user
             $user->categories()->attach([
                 1, // ID of 'work' category
                 2, // ID of 'school' category
