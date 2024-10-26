@@ -65,8 +65,8 @@ class TaskController extends Controller
                 ]);
             
                 $apiEndpoint = 'https://api.openai.com/v1/assistants';
-                $apiKey = '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';
-                $assistantId = 'asst_BCKhrQ64OIXkH6wDf81lCkGn'; 
+                $apiKey = config('services.openai.api_key');
+                $assistantId = config('services.openai.asst_id');
         
                 date_default_timezone_set('America/Chicago');
                 $today = date('Y-m-d');

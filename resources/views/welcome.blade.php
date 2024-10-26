@@ -64,7 +64,6 @@
                                 } else {
                                     $dueDateClass = 'due-date-green';
                                 }
-                                // Convert the due date to the desired format
                                 $dueDate = date('M d', strtotime($task->due_date));
 
                                 // Retrieve category color from database
